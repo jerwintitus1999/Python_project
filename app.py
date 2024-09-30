@@ -1,38 +1,33 @@
 import streamlit as st
 
-st.title("Hello World with Balloons!")
-st.write("Click the button to celebrate.")
+import requests
 
-if st.button('Celebrate!'):
-    st.balloons()
-
-# import streamlit as st
-
-st.title("User Input Example")
-st.title("User Input Example")
-
-name = st.text_input("Enter your name")
-if name:
-    st.write(f"Hello, {name}! Welcome to Streamlit!")
-
-# import streamlit as st
 import pandas as pd
 
-st.title("Map of Chennai")
+st.title("Find the country")
 
-# Coordinates for Chennai (latitude, longitude)
-chennai_coordinates = pd.DataFrame({
-    'lat': [12.925947999046729],
-    'lon': [80.23581106680246]
-})
+country = st.text_input("Enter the country name")
 
-# Display the map with Chennai's coordinates
-st.map(chennai_coordinates)
+if country:
+    st.write(f"The country name is {country}")
+    API_KEY = '48283f18b28b40898d94a008bbf9ca65'
+    url = f"https://api.opencagedata.com/geocode/v1/json?q={country}&key={API_KEY}"
 
-checkBox = st.radio(
-    "What is your favourite food",
-    ["Pizza", "Burger", "Dosa"],
-    index= None,
-)
+    response = requests.get(url)
+    data = response.json()
 
-st.write("You selected: ", checkBox)
+    if data['results']:
+        lat = data['results'][0]['geometry']['lat']
+        lon = data['results'][0]['geometry']['lng']
+        print(f"Latitude: {lat}, Longitude: {lon}")
+
+        # Coordinates for the given country (latitude, longitude)
+        coordinates = pd.DataFrame({
+            'lat': [lat],
+            'lon': [lon]
+        })
+
+        # Display the countrys coordinates
+        st.map(coordinates)
+    else:
+        print("Location not found")
