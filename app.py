@@ -9,6 +9,7 @@ if st.button('Celebrate!'):
 # import streamlit as st
 
 st.title("User Input Example")
+st.title("User Input Example")
 
 name = st.text_input("Enter your name")
 if name:
